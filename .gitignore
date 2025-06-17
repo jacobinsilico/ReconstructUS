@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+env/
+venv/
+*.ipynb_checkpoints
+
+# Jupyter notebook metadata
+.ipynb_checkpoints/
+
+# MATLAB
+*.asv
+*.mex*
+*.mat
+*.fig
+*.log
+
+# System
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Model artifacts and outputs
+checkpoints/
+runs/
+*.pth
+*.onnx
+*.h5
+*.tflite
+
+# FPGA tool output (if you use Vivado/Vitis/etc.)
+*.jou
+*.log
+*.str
+*.bin
+*.bit
+*.xpr
+*.xci
+*.cache
+*.hw
+*.sim
+*.vcd
+*.vvp
+*.wdb
+*.dcp
+
+# Data
+data/
+*.uff
+*.npy
+
+# VSCode (if applicable)
+.vscode/
