@@ -89,14 +89,14 @@ class CustomResNet(nn.Module):
 if __name__ == "__main__":
     # simulate a batch of 4 ultrasound pre-beamformed RF data files
     x = torch.randn(4, 75, 128, 128)
-    
+    output_size = 256    
     # instantiate the model and do a forward pass
-    model = CustomResNet(in_channels=75, base_channels=32, output_size=128)
+    model = CustomResNet(in_channels=75, base_channels=32, output_size=output_size)
     y = model(x)    
     
     # assert to throw in error in case of mismatch
-    assert y.shape == (4, 1, 128, 128), f"Unexpected output shape: {y.shape}"
+    assert y.shape == (4, 1, output_size, output_size), f"Unexpected output shape: {y.shape}"
 
     # if everything works, we see model summary and output shape
-    summary(model, input_size=(4, 75, 128, 128))
+    summary(model, input_size=(4, 75, output_size, output_size))
     print("Output shape:", y.shape)

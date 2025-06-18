@@ -1,17 +1,17 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torchinfo import summary
+
 
 class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels, dropout=0.2):
         super(DoubleConv, self).__init__()
         self.block = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(out_channels),
             nn.LeakyReLU(0.1, inplace=True),
             nn.Dropout2d(p=dropout),
             nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(out_channels),
             nn.LeakyReLU(0.1, inplace=True),
         )
 
@@ -72,3 +72,20 @@ class CustomUNet(nn.Module):
         out = self.final(d1)           # (B, 1, H, W)
         out = torch.sigmoid(out)
         return F.interpolate(out, size=(self.output_size, self.output_size), mode='bilinear', align_corners=False)
+    
+
+# sanity test to make sure that the model output has correct dimensions
+if __name__ == "__main__":
+    # simulate a batch of 4 ultrasound pre-beamformed RF data files
+    x = torch.randn(4, 75, 128, 128)
+    output_size = 256    
+    # instantiate the model and do a forward pass
+    model = CustomUNet(in_channels=75, base_channels=32, output_size=output_size)
+    y = model(x)    
+    
+    # assert to throw in error in case of mismatch
+    assert y.shape == (4, 1, output_size, output_size), f"Unexpected output shape: {y.shape}"
+
+    # if everything works, we see model summary and output shape
+    summary(model, input_size=(4, 75, output_size, output_size))
+    print("Output shape:", y.shape)
