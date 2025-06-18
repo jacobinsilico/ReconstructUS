@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchinfo import summary
 
+
 class BasicBlock(nn.Module):
     def __init__(self, in_channels, out_channels, downsample=False, dropout=0.2):
         super(BasicBlock, self).__init__()
@@ -83,6 +84,7 @@ class CustomResNet(nn.Module):
         x = torch.sigmoid(x)
         return F.interpolate(x, size=(self.output_size, self.output_size), mode='bilinear', align_corners=False)
     
+
 # sanity test to make sure that the model output has correct dimensions
 if __name__ == "__main__":
     # simulate a batch of 4 ultrasound pre-beamformed RF data files
