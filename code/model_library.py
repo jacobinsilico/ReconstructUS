@@ -20,6 +20,7 @@ class ResNetBaseline(nn.Module):
 # ------------------- #
 class UNet(nn.Module):
     def __init__(self, in_channels=1, out_channels=1):
+        # TODO: decide on whether to use GroupNorm, BatchNorm or dropout and modify the definition
         super(UNet, self).__init__()
 
         def conv_block(in_c, out_c):
