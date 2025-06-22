@@ -32,18 +32,9 @@ class UltrasoundDataset(Dataset):
         rf[:, drop_indices] = 0
         return rf
 
-    def augment_gt(self, gt):
-    # Deterministic contrast jitter
-        contrast_factor = 1.  # Slight contrast boost
-        gt = (gt - 0.5) * contrast_factor + 0.5
-        gt = torch.clamp(gt, 0.0, 1.0)
-
-        # Deterministic Gaussian noise
-        noise_std = 0.03
-        torch.manual_seed(42)  # Set for reproducibility (optional — or pass externally)
-        noise = torch.randn_like(gt) * noise_std
+    def augment_gt(gt):
+        gt = gt.clone()
+        noise = torch.randn_like(gt) * 0.000001
         gt = gt + noise
         gt = torch.clamp(gt, 0.0, 1.0)
-
         return gt
-
