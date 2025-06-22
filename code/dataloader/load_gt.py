@@ -2,7 +2,7 @@ import torch
 import scipy.io as sio
 from tqdm import tqdm
 
-def load_img_stack(img_paths, repeats_per_img=75):
+def load_gt_stack(img_paths, repeats_per_img=75):
     """
     Loads and normalizes GT ultrasound images, repeating each image `repeats_per_img` times.
     
