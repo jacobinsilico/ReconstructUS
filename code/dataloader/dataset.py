@@ -32,7 +32,7 @@ class UltrasoundDataset(Dataset):
         rf[:, drop_indices] = 0
         return rf
 
-    def augment_gt(gt):
+    def augment_gt(self, gt):
         gt = gt.clone()
         noise = torch.randn_like(gt) * 0.000001
         gt = gt + noise
