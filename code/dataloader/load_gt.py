@@ -18,7 +18,11 @@ def load_gt_stack(img_paths, repeats_per_img=75):
     for path in tqdm(sorted(img_paths)):
         img = sio.loadmat(path)['img']  # expected shape: [378, 609]
         print(f"Loaded {path} | raw min: {img.min().item():.2f}, max: {img.max().item():.2f}") # debugging
-        img = torch.tensor(img, dtype=torch.float32) / 255.0  # normalize to [0, 1]
+        #img = torch.tensor(img, dtype=torch.float32) / 255.0  # normalize to [0, 1] incorrect since images are complex!
+        img = torch.tensor(img)  # will be complex64 automatically
+        img = torch.abs(img)     # compute magnitude: sqrt(re² + im²)
+        img = (img - img.min()) / (img.max() - img.min() + 1e-8)  # normalize to [0, 1]
+
 
         # Repeat for each plane wave
         for _ in range(repeats_per_img):
