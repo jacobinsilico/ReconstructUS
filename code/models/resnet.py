@@ -33,7 +33,7 @@ class BasicBlock(nn.Module):
 
 
 class CustomResNet(nn.Module):
-    def __init__(self, in_channels=1, base_channels=32, output_shape=(378, 609), dropout=0.2):
+    def __init__(self, in_channels=1, base_channels=32, output_shape=(387, 609), dropout=0.2):
         super(CustomResNet, self).__init__()
         self.output_shape = output_shape
 
@@ -82,6 +82,6 @@ if __name__ == "__main__":
     model = CustomResNet(in_channels=1, output_shape=(378, 609))
     y = model(x)
     print("Output shape:", y.shape)
-    assert y.shape == (4, 1, 378, 609)
+    assert y.shape == (4, 1, 387, 609)
 
     summary(model, input_size=(1, 1, 3328, 128), depth=2)
