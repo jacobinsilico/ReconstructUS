@@ -17,6 +17,7 @@ def load_gt_stack(img_paths, repeats_per_img=75):
 
     for path in tqdm(sorted(img_paths)):
         img = sio.loadmat(path)['img']  # expected shape: [378, 609]
+        print(f"Loaded {path} | raw min: {img.min().item():.2f}, max: {img.max().item():.2f}") # debugging
         img = torch.tensor(img, dtype=torch.float32) / 255.0  # normalize to [0, 1]
 
         # Repeat for each plane wave
