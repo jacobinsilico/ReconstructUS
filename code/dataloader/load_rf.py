@@ -30,7 +30,7 @@ def pad_rf_frame(rf, target_depth):
 # -------------------------------
 # 3. Load + process RF tensor
 # -------------------------------
-def load_rf_stack(rf_paths, target_depth=3328):
+def load_rf_stack(rf_paths, target_depth=1600):
     rf_tensor = []
 
     for path in tqdm(sorted(rf_paths)):
@@ -46,3 +46,9 @@ def load_rf_stack(rf_paths, target_depth=3328):
             rf_tensor.append(rf)
 
     return torch.stack(rf_tensor)  # shape: [N, target_depth, 128]
+
+def group_plane_waves(rf_tensor, group_size=5):
+    total_frames = rf_tensor.shape[0]
+    usable_frames = total_frames - (total_frames % group_size)  # Drop leftovers if not divisible
+    grouped = rf_tensor[:usable_frames].view(-1, group_size, rf_tensor.shape[1], rf_tensor.shape[2])
+    return grouped  # shape: [B, 5, 1600, 128]

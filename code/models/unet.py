@@ -14,7 +14,7 @@ class ConvBlock(nn.Module):
     def forward(self, x):
         return self.op(x)
 
-class MicroUNet(nn.Module):
+class CustomUNet(nn.Module):
     def __init__(self, in_channels=1, base_channels=32):
         super().__init__()
 
@@ -66,7 +66,7 @@ class MicroUNet(nn.Module):
 if __name__ == "__main__":
     from torchinfo import summary
 
-    model = MicroUNet(in_channels=1, base_channels=32)
+    model = CustomUNet(in_channels=1, base_channels=32)
     model.eval()
 
     dummy_input = torch.randn(1, 1, 1800, 128)  # Example: batch size 8

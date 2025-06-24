@@ -1,3 +1,3 @@
 from .resnet import CustomResNet
-from .unet import MicroUNet
+from .unet import CustomUNet
 from .effunet import EfficientUNetBeamformer
