@@ -4,28 +4,30 @@ from tqdm import tqdm
 
 def load_gt_stack(img_paths, repeats_per_img=75):
     """
-    Loads and normalizes GT ultrasound images, repeating each image `repeats_per_img` times.
-    
-    Args:
-        img_paths (list of str): Paths to .mat files containing GT images (field name: 'img').
-        repeats_per_img (int): Number of times to repeat each GT image to match plane waves.
+    Loads and normalizes GT ultrasound envelope images to [0, 1] in linear scale.
+    Repeats each GT image to match plane waves.
 
     Returns:
-        torch.Tensor: Tensor of shape [num_total_images, 378, 609] in range [0, 1].
+        torch.Tensor: [N, H, W] in linear scale, normalized to [0, 1]
     """
     img_tensor = []
 
+    # First pass: find global max across all images
+    global_max = 0.0
+    for path in img_paths:
+        img = torch.tensor(sio.loadmat(path)['img'])
+        img_mag = torch.abs(img)
+        global_max = max(global_max, img_mag.max().item())
+
+    print(f"[INFO] Global max (linear magnitude): {global_max:.4f}")
+
+    # Second pass: normalize each image using global max
     for path in tqdm(sorted(img_paths)):
-        img = sio.loadmat(path)['img']  # expected shape: [378, 609]
-        print(f"Loaded {path} | raw min: {img.min().item():.2f}, max: {img.max().item():.2f}") # debugging
-        #img = torch.tensor(img, dtype=torch.float32) / 255.0  # normalize to [0, 1] incorrect since images are complex!
-        img = torch.tensor(img)  # will be complex64 automatically
-        img = torch.abs(img)     # compute magnitude: sqrt(re² + im²)
-        img = (img - img.min()) / (img.max() - img.min() + 1e-8)  # normalize to [0, 1]
+        img = torch.tensor(sio.loadmat(path)['img'])  # complex
+        img = torch.abs(img)  # envelope
+        img = img / (global_max + 1e-8)  # normalize to [0, 1]
 
-
-        # Repeat for each plane wave
         for _ in range(repeats_per_img):
             img_tensor.append(img)
 
-    return torch.stack(img_tensor)  # final shape: [450, 378, 609]
+    return torch.stack(img_tensor)  # shape: [N, H, W]
