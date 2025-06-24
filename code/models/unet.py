@@ -59,7 +59,8 @@ class MicroUNet(nn.Module):
         d1 = self.dec1(torch.cat([self.up1(d2), x1], dim=1))
 
         out = self.final(d1)
-        return torch.sigmoid(out)
+        out = torch.sigmoid(out)
+        return F.interpolate(out, size=(387, 609), mode='bicubic', align_corners=False)
 
 # Example usage
 if __name__ == "__main__":
