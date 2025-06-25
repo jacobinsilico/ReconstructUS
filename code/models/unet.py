@@ -93,7 +93,7 @@ class CustomUNet(nn.Module):
 # Example usage
 if __name__ == "__main__":
     from torchinfo import summary
-    model = CustomUNet(in_channels=1, base_channels=32)
+    model = CustomUNet(in_channels=1, base_channels=24)
     model.eval()
 
     dummy_input = torch.randn(8, 1, 1600, 128)
