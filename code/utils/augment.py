@@ -1,6 +1,6 @@
 import torch
 
-def add_speckle_noise(img, std=0.0005):
+def add_speckle_noise(img, std=0.0001):
     noise = torch.randn_like(img) * std
     return img + img * noise
 
