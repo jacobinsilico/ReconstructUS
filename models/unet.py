@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torchinfo import summary
+
 
 class ResidualConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, use_dropout=False, p=0.1):
@@ -24,12 +26,11 @@ class ResidualConvBlock(nn.Module):
         x = self.dropout(x)
         return x + residual
 
-class CustomUNet(nn.Module):
-    def __init__(self, in_channels=1, base_channels=32, output_size=(192, 304)):
-        super().__init__()
-        self.output_size = output_size
 
-        # Encoder
+class CustomUNet(nn.Module):
+    def __init__(self, in_channels=1, base_channels=32):
+        super().__init__()
+
         self.enc1 = ResidualConvBlock(in_channels, base_channels)
         self.pool1 = nn.MaxPool2d(2)
 
@@ -39,7 +40,6 @@ class CustomUNet(nn.Module):
         self.enc3 = ResidualConvBlock(base_channels * 2, base_channels * 4)
         self.pool3 = nn.MaxPool2d(2)
 
-        # Bottleneck with dilated conv
         self.bottleneck = nn.Sequential(
             nn.Conv2d(base_channels * 4, base_channels * 8, kernel_size=3, padding=2, dilation=2),
             nn.BatchNorm2d(base_channels * 8),
@@ -49,7 +49,6 @@ class CustomUNet(nn.Module):
             nn.LeakyReLU(0.1, inplace=True)
         )
 
-        # Decoder
         self.up3 = nn.Sequential(
             nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False),
             nn.Conv2d(base_channels * 8, base_channels * 4, kernel_size=1)
@@ -68,7 +67,6 @@ class CustomUNet(nn.Module):
         )
         self.dec1 = ResidualConvBlock(base_channels + base_channels, base_channels)
 
-        # Final sharpening and output layer
         self.sharpen = nn.Sequential(
             nn.Conv2d(base_channels, base_channels, kernel_size=3, padding=1),
             nn.LeakyReLU(0.1, inplace=True),
@@ -87,13 +85,12 @@ class CustomUNet(nn.Module):
 
         out = self.sharpen(d1)
         out = self.final(out)
+        return out
 
-        return F.interpolate(out, size=self.output_size, mode='bicubic', align_corners=False)
 
 # Example usage
 if __name__ == "__main__":
-    from torchinfo import summary
-    model = CustomUNet(in_channels=1, base_channels=16)
+    model = CustomUNet(in_channels=1, base_channels=24)
     model.eval()
 
     dummy_input = torch.randn(1, 1, 1600, 128)
