@@ -3,9 +3,16 @@ import argparse
 import torch
 import numpy as np
 from tqdm import tqdm
+import sys
 
 from pytorch_nndct.apis import torch_quantizer
-from ReconstructUS.code.models.effunet import EfficientUNetBeamformer
+
+# Add models folder to sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))  # /ReconstructUS/vitis-ai/quantization
+models_dir = os.path.abspath(os.path.join(current_dir, "..", "..", "models"))
+sys.path.append(models_dir)
+
+from models.effunet import CustomEfficientUNet  # models/effunet.py
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -33,7 +40,10 @@ def main():
     parser.add_argument('--quant_mode', type=str, default='calib', choices=['float', 'calib', 'test'])
     parser.add_argument('--batch_size', type=int, default=1)
     parser.add_argument('--subset_len', type=int, default=60)
-    parser.add_argument('--data_dir', type=str, default='calib_images')
+    
+    default_data_dir = os.path.join('..', "calib_images")
+    parser.add_argument('--data_dir', type=str, default=default_data_dir)
+    
     parser.add_argument('--deploy', action='store_true')
     parser.add_argument('--fast_finetune', action='store_true')
     parser.add_argument('--target', type=str, default=None)
@@ -45,8 +55,8 @@ def main():
         args.batch_size = 1
         args.subset_len = 1
 
-    model = EfficientUNetBeamformer(in_channels=1, base_channels=16).to(device)
-    model.load_state_dict(torch.load("model_weights.pth", map_location=device))
+    model = CustomEfficientUNet(in_channels=1, base_channels=16).to(device)
+    model.load_state_dict(torch.load(os.path.join(current_dir, "model_weights.pth"), map_location=device))
     model.eval()
 
     calib_input = load_data(args.data_dir, args.batch_size, args.subset_len)
@@ -56,7 +66,7 @@ def main():
         args.quant_mode,
         model,
         (input_sample,),
-        output_dir="quantized_model",
+        output_dir=os.path.join(current_dir, "quantized_model"),
         quant_config_file=args.config_file,
         target=args.target,
     )
