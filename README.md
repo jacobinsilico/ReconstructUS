@@ -12,3 +12,6 @@ This repository includes:
 ## 📁 File Structure
 
 This is a placeholder that will soon be updated. 
+
+---
+Happy computing!
