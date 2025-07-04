@@ -116,8 +116,8 @@ class EfficientUNetBeamformer(nn.Module):
 
 # --- Sanity test ---
 if __name__ == "__main__":
-    x = torch.randn(8, 1, 1600, 128)
+    x = torch.randn(1, 1, 1600, 128)
     model = EfficientUNetBeamformer(in_channels=1, base_channels=16)
     y = model(x)
-    summary(model, input_size=(8, 1, 1600, 128))
+    summary(model, input_size=(1, 1, 1600, 128))
     print("Output shape:", y.shape)
