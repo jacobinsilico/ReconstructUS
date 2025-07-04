@@ -4,7 +4,7 @@ def add_speckle_noise(img, std=0.0001):
     noise = torch.randn_like(img) * std
     return img + img * noise
 
-def add_jitter_and_noise(gt_tensor, contrast_factor=1.001, noise_std=0.0005, prob=1.0, seed=None):
+def add_jitter_and_noise(gt_tensor, contrast_factor=1.001, noise_std=0.0001, prob=1.0, seed=None):
     """
     Apply contrast jitter and optional noise to GT images.
     - Contrast is applied if contrast_factor is not None.
