@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchinfo import summary
+from torchinfo import summary 
 
+# This model contains 970,202 trainable params and was the second one developed in the project
 class DepthwiseSeparableConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
@@ -17,6 +18,7 @@ class DepthwiseSeparableConv(nn.Module):
         x = self.pointwise(x)
         x = self.bn(x)
         return self.act(x)
+
 
 class ResidualSeparableBottleneckBlock(nn.Module):
     def __init__(self, in_channels, out_channels, bottleneck_ratio=2, use_dropout=False, p=0.1):
@@ -38,10 +40,10 @@ class ResidualSeparableBottleneckBlock(nn.Module):
         x = self.dropout(x)
         return x + residual
 
-class EfficientUNetBeamformer(nn.Module):
-    def __init__(self, in_channels=1, base_channels=24, output_size=(192, 304)):
+
+class CustomEfficientUNet(nn.Module):
+    def __init__(self, in_channels=1, base_channels=16):
         super().__init__()
-        self.output_size = output_size
 
         # Encoder
         self.enc1 = ResidualSeparableBottleneckBlock(in_channels, base_channels)
@@ -66,7 +68,7 @@ class EfficientUNetBeamformer(nn.Module):
             nn.LeakyReLU(0.1, inplace=True)
         )
 
-        # Decoder (aggressively pruned)
+        # Decoder
         self.up4 = nn.Sequential(
             nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False),
             nn.Conv2d(base_channels * 16, base_channels * 4, kernel_size=1)
@@ -91,7 +93,6 @@ class EfficientUNetBeamformer(nn.Module):
         )
         self.dec1 = ResidualSeparableBottleneckBlock(base_channels + base_channels, base_channels)
 
-        # Final layer
         self.sharpen = nn.Sequential(
             nn.Conv2d(base_channels, base_channels, kernel_size=3, padding=1),
             nn.LeakyReLU(0.1, inplace=True)
@@ -112,12 +113,15 @@ class EfficientUNetBeamformer(nn.Module):
 
         out = self.sharpen(d1)
         out = self.final(out)
-        return F.interpolate(out, size=self.output_size, mode='bicubic', align_corners=False)
+        return out
 
-# --- Sanity test ---
+
+# --- Sanity Test ---
 if __name__ == "__main__":
+    model = CustomEfficientUNet(in_channels=1, base_channels=16)
+    model.eval()
+
     x = torch.randn(1, 1, 1600, 128)
-    model = EfficientUNetBeamformer(in_channels=1, base_channels=16)
     y = model(x)
     summary(model, input_size=(1, 1, 1600, 128))
     print("Output shape:", y.shape)

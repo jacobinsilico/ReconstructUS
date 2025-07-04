@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchinfo import summary
 
-
+# This model contains 1,047,577 trainable params and was the first one developed in the project
 class ResidualConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, use_dropout=False, p=0.1):
         super().__init__()
@@ -28,7 +28,7 @@ class ResidualConvBlock(nn.Module):
 
 
 class CustomUNet(nn.Module):
-    def __init__(self, in_channels=1, base_channels=32):
+    def __init__(self, in_channels=1, base_channels=24):
         super().__init__()
 
         self.enc1 = ResidualConvBlock(in_channels, base_channels)
@@ -88,7 +88,7 @@ class CustomUNet(nn.Module):
         return out
 
 
-# Example usage
+# --- Sanity Test ---
 if __name__ == "__main__":
     model = CustomUNet(in_channels=1, base_channels=24)
     model.eval()
