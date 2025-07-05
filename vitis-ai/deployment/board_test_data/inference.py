@@ -1,7 +1,6 @@
 import numpy as np
 import vart
 import xir
-from skimage.metrics import structural_similarity as ssim
 
 # Load .xmodel
 graph = xir.Graph.deserialize("EfficientUNetBeamformer_int.xmodel")

@@ -9,7 +9,7 @@ from pytorch_nndct.apis import torch_quantizer
 
 # Add models folder to sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))  # /ReconstructUS/vitis-ai/quantization
-models_dir = os.path.abspath(os.path.join(current_dir, "..", "..", "models"))
+models_dir = os.path.abspath(os.path.join(current_dir, "..", ".."))
 sys.path.append(models_dir)
 
 from models.effunet import CustomEfficientUNet  # models/effunet.py
@@ -56,7 +56,7 @@ def main():
         args.subset_len = 1
 
     model = CustomEfficientUNet(in_channels=1, base_channels=16).to(device)
-    model.load_state_dict(torch.load(os.path.join(current_dir, "model_weights.pth"), map_location=device))
+    model.load_state_dict(torch.load(os.path.join(current_dir, "trained_effunet", "model_weights.pth"), map_location=device))
     model.eval()
 
     calib_input = load_data(args.data_dir, args.batch_size, args.subset_len)
