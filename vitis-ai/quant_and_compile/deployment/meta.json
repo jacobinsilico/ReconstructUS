@@ -1,0 +1,8 @@
+{
+    "lib": "libvart-dpu-runner.so",
+    "filename": "CustomEfficientUNet.xmodel",
+    "kernel": [
+        "subgraph_CustomEfficientUNet__CustomEfficientUNet_Conv2d_final__ret"
+    ],
+    "target": "DPUCZDX8G_ISA1_B3136"
+}
