@@ -84,6 +84,11 @@ For FPGA deployment, additional dependencies (such as `xir`) must be installed *
 
 ---
 
+## License
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+
+---
+
 ## Final Notes
 
 If you find this repository useful, please consider starring it on GitHub or mentioning it in your work.  
