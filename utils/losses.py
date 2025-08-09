@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
-from piq import SSIMLoss           # optional: piq-based SSIM
-from pytorch_msssim import ms_ssim  # MS-SSIM
+from piq import SSIMLoss            # optional: piq-based SSIM
+from pytorch_msssim import ms_ssim  # MS-SSIM - this loss seems to work better since it is multi-scale as opposed to SSIM above
 import torch.nn as nn
 
 # === 1. SSIM Loss (piq version) ===
