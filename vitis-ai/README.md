@@ -21,7 +21,7 @@ The final `.xmodel` includes a DPU fingerprint that depends on the tool version 
 If the fingerprints do not match, you will encounter an error.  
 To resolve this, you may need to:
 - Modify the `arch.json` file within Vitis AI container before using `vai_c_xir`, or  
-- Use a compatible version of the Vitis AI toolchain (for this project, quantization was performed with Vitis AI 3.5, but compilation had to be done with Vitis AI 2.5 to avoid a fingerprint mismatch).
+- Use a compatible version of the Vitis AI toolchain (for this project, quantization was performed with Vitis AI 3.5, but compilation had to be done with Vitis AI 2.0 to avoid a fingerprint mismatch).
 
 ---
 
