@@ -73,7 +73,7 @@ Google Colab-ready notebook to train the EfficientNet-based U-Net.
 Google Colab-ready notebook to train the U-Net.
 
 ### `requirements.txt`
-Python dependencies for training and evaluation (runtime environment only).
+Python dependencies for training and evaluation.
 
 ---
 
