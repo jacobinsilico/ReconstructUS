@@ -1,7 +1,8 @@
 # Vitis AI Deployment Pipeline (Kria KV260)
 
-This directory documents the full deployment pipeline of a custom U-Net-based model used for **ultrasound image reconstruction** from a **single plane wave input**.  
-The model was trained on a dataset of **coherent plane wave compounded acquisitions**, and is deployed onto the **Kria KV260 Vision AI Starter Kit** using the Vitis AI toolchain.
+This directory documents the full deployment pipeline of a custom U-Net-based model for **ultrasound image reconstruction** from a **single plane wave input**. The model was trained on a dataset of **coherent plane wave compounded acquisitions** and deployed to the **Kria KV260 Vision AI Starter Kit** using the Vitis AI toolchain.
+
+The workflow was carried out on a Windows machine and is described in detail in the `HOWTO.md` file in this directory. Refer to it for step-by-step deployment instructions.
 
 ---
 
